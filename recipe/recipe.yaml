@@ -1,19 +1,18 @@
 schema_version: 1
 
 context:
-  name: parsy
-  version: "2.1"
+  version: '2.2'
 
 package:
-  name: ${{ name|lower }}
+  name: parsy
   version: ${{ version }}
 
 source:
-  url: https://pypi.org/packages/source/${{ name[0] }}/${{ name }}/parsy-${{ version }}.tar.gz
-  sha256: fd5dd18d7b0b61f8275ee88665f430a20c02cf5a82d88557f35330530186d7ac
+  url: https://github.com/python-parsy/parsy/archive/refs/tags/v${{ version }}.tar.gz
+  sha256: 332d539039959807f829de672f0a30e14cdc3d9f848a6ec2beb8949d7ed7bc47
 
 build:
-  number: 1
+  number: 0
   noarch: python
   script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
@@ -21,6 +20,7 @@ requirements:
   host:
     - pip
     - python ${{ python_min }}.*
+    - setuptools
   run:
     - python >=${{ python_min }}
 
@@ -32,6 +32,16 @@ tests:
       python_version:
         - ${{ python_min }}.*
         - '*'
+  - script:
+      - pytest -vvv tests/
+    requirements:
+      run:
+        - pytest
+        - pytest-cov
+        - python ${{ python_min }}.*
+    files:
+      source:
+        - tests/
 
 about:
   summary: easy-to-use parser combinators, for parsing in pure Python
