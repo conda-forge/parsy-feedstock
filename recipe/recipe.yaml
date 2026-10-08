@@ -1,0 +1,55 @@
+schema_version: 1
+
+context:
+  version: '2.2'
+
+package:
+  name: parsy
+  version: ${{ version }}
+
+source:
+  url: https://github.com/python-parsy/parsy/archive/refs/tags/v${{ version }}.tar.gz
+  sha256: 332d539039959807f829de672f0a30e14cdc3d9f848a6ec2beb8949d7ed7bc47
+
+build:
+  number: 0
+  noarch: python
+  script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+
+requirements:
+  host:
+    - pip
+    - python ${{ python_min }}.*
+    - setuptools
+  run:
+    - python >=${{ python_min }}
+
+tests:
+  - python:
+      imports:
+        - parsy
+      pip_check: true
+      python_version:
+        - ${{ python_min }}.*
+        - '*'
+  - script:
+      - pytest -vvv tests/
+    requirements:
+      run:
+        - pytest
+        - pytest-cov
+        - python ${{ python_min }}.*
+    files:
+      source:
+        - tests/
+
+about:
+  summary: easy-to-use parser combinators, for parsing in pure Python
+  license: MIT
+  license_file: LICENSE
+  homepage: https://github.com/python-parsy/parsy
+
+extra:
+  recipe-maintainers:
+    - cpcloud
+    - gforsyth
